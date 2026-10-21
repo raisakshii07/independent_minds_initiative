@@ -43,7 +43,7 @@ git push -u origin main
 4. Render will automatically detect the [`render.yaml`](./render.yaml) file and pre-configure:
    - **Service Name**: `independent-minds-initiative`
    - **Runtime**: `Node`
-   - **Build Command**: `npm install && npm run build`
+   - **Build Command**: `npm install --include=dev && npm run build`
    - **Start Command**: `npm run start`
    - **Health Check Path**: `/api/articles`
 5. You will see prompt fields for your secret environment variables. Fill in:
@@ -68,7 +68,7 @@ If you prefer setting up manually without Blueprints:
    - **Region**: Any (e.g. `Oregon (US West)` or `Frankfurt (EU)`)
    - **Branch**: `main`
    - **Runtime**: `Node`
-   - **Build Command**: `npm install && npm run build`
+   - **Build Command**: `npm install --include=dev && npm run build`
    - **Start Command**: `npm run start`
    - **Instance Type**: `Free`
 4. Scroll down to **Advanced** > **Health Check Path**:

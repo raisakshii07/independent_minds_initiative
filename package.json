@@ -14,19 +14,6 @@
   },
   "dependencies": {
     "@imagekit/nodejs": "^7.13.0",
-    "bcryptjs": "^3.0.3",
-    "cloudinary": "^2.11.0",
-    "imagekit": "^6.0.0",
-    "jsonwebtoken": "^9.0.3",
-    "lucide-react": "^1.61.0",
-    "mongoose": "^9.11.2",
-    "multer": "^2.4.0",
-    "next": "16.4.2",
-    "nodemailer": "^10.1.7",
-    "react": "19.3.0",
-    "react-dom": "19.3.0"
-  },
-  "devDependencies": {
     "@tailwindcss/turbopack": "^4",
     "@types/bcryptjs": "^2.4.6",
     "@types/jsonwebtoken": "^9.0.10",
@@ -35,9 +22,21 @@
     "@types/nodemailer": "^8.0.2",
     "@types/react": "^19",
     "@types/react-dom": "^19",
-    "eslint": "^9",
-    "eslint-config-next": "16.4.2",
+    "bcryptjs": "^3.0.3",
+    "imagekit": "^6.0.0",
+    "jsonwebtoken": "^9.0.3",
+    "lucide-react": "^1.61.0",
+    "mongoose": "^9.11.2",
+    "multer": "^2.4.0",
+    "next": "16.4.2",
+    "nodemailer": "^10.1.7",
+    "react": "19.3.0",
+    "react-dom": "19.3.0",
     "tailwindcss": "^4",
     "typescript": "^5"
+  },
+  "devDependencies": {
+    "eslint": "^9",
+    "eslint-config-next": "16.4.2"
   }
 }
