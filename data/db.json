@@ -1,0 +1,178 @@
+{
+  "admins": [
+    {
+      "id": "admin_root",
+      "username": "admin",
+      "passwordHash": "$2b$10$Ux/r1oQwfVrTh31GlOOi5.xqAy4pGnpp356QDPyCqXZW.2.ZuNkcq",
+      "role": "admin",
+      "createdAt": "2026-10-21T09:52:23.327Z"
+    }
+  ],
+  "articles": [
+    {
+      "id": "art_1792577569113_ctcpf",
+      "title": "rai",
+      "category": "geopolitics",
+      "tag": "jaja",
+      "summary": "asdfgbds",
+      "content": "",
+      "linkUrl": "https://vercel.com",
+      "mediaUrl": "/uploads/1792577490892-Screenshot_2026-10-20_202350.png",
+      "createdAt": "2026-10-21T10:12:49.113Z",
+      "expiresAt": "2026-11-20T10:12:49.113Z",
+      "viewCount": 0
+    },
+    {
+      "id": "art_1792577123348_j1xfs",
+      "title": "vercel",
+      "category": "personal",
+      "tag": "deploy",
+      "summary": "deploying on vercel",
+      "content": "",
+      "linkUrl": "https://vercel.com/",
+      "mediaUrl": "",
+      "createdAt": "2026-10-21T10:05:23.348Z",
+      "expiresAt": "2026-11-20T10:05:23.348Z",
+      "viewCount": 0
+    },
+    {
+      "title": "How geography shapes global power",
+      "category": "geopolitics",
+      "tag": "Geopolitics · Explainer",
+      "summary": "Explore how location, resources, trade routes, and borders influence the choices nations make.",
+      "linkUrl": "mailto:independentmindsinitiative@gmail.com?subject=Geopolitics%20insights",
+      "id": "art_1792576343328_0",
+      "createdAt": "2026-10-21T09:52:23.263Z",
+      "expiresAt": "2026-11-20T09:52:23.263Z"
+    },
+    {
+      "title": "What makes a society thrive?",
+      "category": "society",
+      "tag": "Society · Perspective",
+      "summary": "A look at trust, institutions, education, shared spaces, and the everyday forces that shape social life.",
+      "linkUrl": "mailto:independentmindsinitiative@gmail.com?subject=Society%20insights",
+      "id": "art_1792576343328_1",
+      "createdAt": "2026-10-21T09:51:23.263Z",
+      "expiresAt": "2026-11-20T09:52:23.263Z"
+    },
+    {
+      "title": "Economics beyond the headlines",
+      "category": "economics",
+      "tag": "Economics · Basics",
+      "summary": "Understand inflation, jobs, growth, inequality, and how economic choices affect daily life.",
+      "linkUrl": "mailto:independentmindsinitiative@gmail.com?subject=Economics%20insights",
+      "id": "art_1792576343328_2",
+      "createdAt": "2026-10-21T09:50:23.263Z",
+      "expiresAt": "2026-11-20T09:52:23.263Z"
+    },
+    {
+      "title": "How businesses turn ideas into value",
+      "category": "business",
+      "tag": "Business · Ideas",
+      "summary": "Learn about entrepreneurship, strategy, innovation, markets, and the decisions behind organizations.",
+      "linkUrl": "mailto:independentmindsinitiative@gmail.com?subject=Business%20insights",
+      "id": "art_1792576343328_3",
+      "createdAt": "2026-10-21T09:49:23.263Z",
+      "expiresAt": "2026-11-20T09:52:23.263Z"
+    },
+    {
+      "title": "Why the past still matters",
+      "category": "history",
+      "tag": "History · Context",
+      "summary": "Use historical patterns and turning points to better understand today's institutions and debates.",
+      "linkUrl": "mailto:independentmindsinitiative@gmail.com?subject=History%20insights",
+      "id": "art_1792576343328_4",
+      "createdAt": "2026-10-21T09:48:23.263Z",
+      "expiresAt": "2026-11-20T09:52:23.263Z"
+    },
+    {
+      "title": "Technology changing the human story",
+      "category": "science",
+      "tag": "Science & Technology · Discovery",
+      "summary": "Explore emerging technologies, scientific breakthroughs, and the questions they raise for society.",
+      "linkUrl": "mailto:independentmindsinitiative@gmail.com?subject=Science%20and%20technology%20insights",
+      "id": "art_1792576343328_5",
+      "createdAt": "2026-10-21T09:47:23.263Z",
+      "expiresAt": "2026-11-20T09:52:23.263Z"
+    },
+    {
+      "title": "Climate, cities, and shared responsibility",
+      "category": "environment",
+      "tag": "Climate & Environment · Future",
+      "summary": "Connect sustainability with energy, urban life, public choices, and the future we build together.",
+      "linkUrl": "mailto:independentmindsinitiative@gmail.com?subject=Climate%20insights",
+      "id": "art_1792576343328_6",
+      "createdAt": "2026-10-21T09:46:23.263Z",
+      "expiresAt": "2026-11-20T09:52:23.263Z"
+    },
+    {
+      "title": "How public decisions get made",
+      "category": "politics",
+      "tag": "Politics & Governance · Civics",
+      "summary": "Understand institutions, public policy, citizen participation, and the systems that shape everyday life.",
+      "linkUrl": "mailto:independentmindsinitiative@gmail.com?subject=Governance%20insights",
+      "id": "art_1792576343328_7",
+      "createdAt": "2026-10-21T09:45:23.263Z",
+      "expiresAt": "2026-11-20T09:52:23.263Z"
+    },
+    {
+      "title": "How to think clearly about difficult questions",
+      "category": "philosophy",
+      "tag": "Philosophy & Ideas · Reflection",
+      "summary": "Practice examining assumptions, weighing arguments, and engaging with ideas beyond easy answers.",
+      "linkUrl": "mailto:independentmindsinitiative@gmail.com?subject=Philosophy%20insights",
+      "id": "art_1792576343328_8",
+      "createdAt": "2026-10-21T09:44:23.263Z",
+      "expiresAt": "2026-11-20T09:52:23.263Z"
+    },
+    {
+      "title": "Who shapes the stories we believe?",
+      "category": "culture",
+      "tag": "Culture & Media · Perspective",
+      "summary": "Explore media literacy, culture, narratives, and how information influences the way we see the world.",
+      "linkUrl": "mailto:independentmindsinitiative@gmail.com?subject=Culture%20and%20media%20insights",
+      "id": "art_1792576343328_9",
+      "createdAt": "2026-10-21T09:43:23.263Z",
+      "expiresAt": "2026-11-20T09:52:23.263Z"
+    },
+    {
+      "title": "Curiosity as a lifelong skill",
+      "category": "personal",
+      "tag": "Psychology & Personal Growth · Learning",
+      "summary": "Discover how habits, motivation, attention, and reflection can help us keep learning and growing.",
+      "linkUrl": "mailto:independentmindsinitiative@gmail.com?subject=Psychology%20insights",
+      "id": "art_1792576343328_10",
+      "createdAt": "2026-10-21T09:42:23.263Z",
+      "expiresAt": "2026-11-20T09:52:23.263Z"
+    }
+  ],
+  "media": [
+    {
+      "title": "map ",
+      "filename": "1792577490892-Screenshot_2026-10-20_202350.png",
+      "url": "/uploads/1792577490892-Screenshot_2026-10-20_202350.png",
+      "type": "image",
+      "size": 177637,
+      "mimeType": "image/png",
+      "id": "media_1792577490893_eckl0",
+      "createdAt": "2026-10-21T10:11:30.893Z"
+    }
+  ],
+  "applications": [
+    {
+      "name": "Aarav Sharma",
+      "email": "aarav@example.com",
+      "city": "",
+      "role": "Joining the community",
+      "message": "",
+      "agreeToContact": true,
+      "emailSent": false,
+      "id": "app_1792576390598_3cloq",
+      "createdAt": "2026-10-21T09:53:10.598Z"
+    }
+  ],
+  "stats": {
+    "expiredArticlesPurged": 0,
+    "totalApplications": 1
+  }
+}
