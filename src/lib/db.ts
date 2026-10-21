@@ -653,25 +653,44 @@ export async function getApplications(): Promise<CommunityApplication[]> {
 // -------------------------------------------------------------
 
 export async function getAdminByUsername(username: string): Promise<AdminUser | null> {
+  const normalizedUser = username.trim().toLowerCase();
+  const defaultUser = (process.env.ADMIN_DEFAULT_USERNAME || 'admin').trim().toLowerCase();
+
   if (isMongoDbConfigured()) {
     const conn = await connectToDatabase();
     if (conn) {
       await ensureMongoSeed();
-      const admin = await AdminModel.findOne({ username: username.toLowerCase() }).lean();
-      if (!admin) return null;
-      return {
-        id: String(admin._id),
-        username: admin.username,
-        passwordHash: admin.passwordHash,
-        role: admin.role,
-        createdAt: new Date(admin.createdAt).toISOString(),
-      };
+      const admin = await AdminModel.findOne({ username: normalizedUser }).lean();
+      if (admin) {
+        return {
+          id: String(admin._id),
+          username: admin.username,
+          passwordHash: admin.passwordHash,
+          role: admin.role,
+          createdAt: new Date(admin.createdAt).toISOString(),
+        };
+      }
     }
   }
 
   // Local fallback
   const db = await readDb();
-  return db.admins.find((a) => a.username.toLowerCase() === username.toLowerCase()) || null;
+  let admin = db.admins.find((a) => a.username.toLowerCase() === normalizedUser);
+  if (!admin && normalizedUser === defaultUser) {
+    const defaultPassword = process.env.ADMIN_DEFAULT_PASSWORD || 'AdminPassword!2026#';
+    const salt = bcrypt.genSaltSync(10);
+    const passwordHash = bcrypt.hashSync(defaultPassword, salt);
+    admin = {
+      id: 'admin_root',
+      username: defaultUser,
+      passwordHash,
+      role: 'admin',
+      createdAt: new Date().toISOString(),
+    };
+    db.admins.push(admin);
+    await writeDb(db);
+  }
+  return admin || null;
 }
 
 export async function updateAdminPassword(username: string, newPassword: string): Promise<boolean> {
