@@ -383,10 +383,10 @@ export default function AdminPortal() {
   // Render Loading State
   if (!mounted || isAuthenticated === null) {
     return (
-      <div className="min-h-screen bg-[#071727] text-[#f4eddf] flex items-center justify-center">
-        <div className="flex items-center gap-3">
-          <RefreshCw className="w-5 h-5 animate-spin text-[#d9bd78]" />
-          <span>Verifying security credentials...</span>
+      <div className="admin-login-screen">
+        <div style={{ display: 'flex', alignItems: 'center', gap: '12px', color: 'var(--cream)' }}>
+          <RefreshCw className="w-5 h-5 animate-spin" style={{ color: 'var(--gold)' }} />
+          <span style={{ fontSize: '0.88rem' }}>Verifying security credentials...</span>
         </div>
       </div>
     );
@@ -395,37 +395,37 @@ export default function AdminPortal() {
   // Render Login Modal / View if unauthenticated
   if (!isAuthenticated) {
     return (
-      <div className="min-h-screen bg-[#071727] text-[#f4eddf] flex flex-col justify-center items-center px-4">
-        <div className="max-w-md w-full bg-[#10283d] border border-[rgba(244,237,223,0.17)] p-8 shadow-2xl relative">
-          <div className="flex items-center justify-center gap-3 mb-6">
-            <div className="w-10 h-10 border border-[#d9bd78] flex items-center justify-center text-[#d9bd78] font-serif text-xl shrink-0">
-              ✦
+      <div className="admin-login-screen">
+        <div className="admin-card">
+          <div className="admin-brand-header">
+            <div className="admin-brand-logo">
+              IMI
             </div>
-            <div>
-              <div className="text-sm font-bold tracking-widest text-[#d9bd78] uppercase leading-tight m-0">
+            <div className="admin-brand-title-wrap">
+              <h1 className="admin-brand-title">
                 Independent Minds
-              </div>
-              <div className="text-[10px] tracking-wider text-[#b4c0c8] uppercase mt-0.5">
+              </h1>
+              <div className="admin-brand-sub">
                 Admin Control Portal
               </div>
             </div>
           </div>
 
-          <div className="text-xs text-[#b4c0c8] mb-6 text-center">
+          <p className="admin-card-desc">
             Sign in with administrative privileges to manage articles, 30-day
             expiration schedules, media assets, and view community applications.
-          </div>
+          </p>
 
           {loginError && (
-            <div className="mb-4 p-3 bg-red-950/60 border border-red-500/50 text-red-200 text-xs flex items-center gap-2">
-              <AlertCircle className="w-4 h-4 shrink-0 text-red-400" />
+            <div className="admin-error-box">
+              <AlertCircle className="w-4 h-4 shrink-0" style={{ color: '#f87171' }} />
               <span>{loginError}</span>
             </div>
           )}
 
-          <form onSubmit={handleLogin} className="space-y-4">
-            <div>
-              <label className="block text-[11px] uppercase tracking-wider text-[#b4c0c8] font-bold mb-1">
+          <form onSubmit={handleLogin}>
+            <div className="admin-form-group">
+              <label className="admin-label">
                 Admin Username
               </label>
               <input
@@ -433,13 +433,14 @@ export default function AdminPortal() {
                 required
                 value={loginUsername}
                 onChange={(e) => setLoginUsername(e.target.value)}
-                className="w-full bg-[#0a1c2d] border border-[#314659] px-3 py-2 text-sm text-[#f4eddf] focus:border-[#d9bd78] outline-none"
+                className="admin-input"
                 placeholder="admin"
+                autoComplete="username"
               />
             </div>
 
-            <div>
-              <label className="block text-[11px] uppercase tracking-wider text-[#b4c0c8] font-bold mb-1">
+            <div className="admin-form-group">
+              <label className="admin-label">
                 Security Password
               </label>
               <input
@@ -447,16 +448,17 @@ export default function AdminPortal() {
                 required
                 value={loginPassword}
                 onChange={(e) => setLoginPassword(e.target.value)}
-                className="w-full bg-[#0a1c2d] border border-[#314659] px-3 py-2 text-sm text-[#f4eddf] focus:border-[#d9bd78] outline-none"
+                className="admin-input"
                 placeholder="••••••••••••"
+                autoComplete="current-password"
               />
             </div>
 
-            <div className="pt-2">
+            <div>
               <button
                 type="submit"
                 disabled={loginLoading}
-                className="w-full btn flex items-center justify-center gap-2"
+                className="admin-submit-btn"
               >
                 {loginLoading ? (
                   <>
@@ -473,19 +475,19 @@ export default function AdminPortal() {
             </div>
           </form>
 
-          <div className="mt-6 pt-4 border-t border-[rgba(244,237,223,0.1)] text-[11px] text-[#8fa3b0] space-y-1">
-            <div className="flex items-center gap-2">
-              <Shield className="w-3.5 h-3.5 text-[#d9bd78]" />
+          <div className="admin-card-footer">
+            <div className="admin-card-footer-item">
+              <Shield className="w-3.5 h-3.5" style={{ color: 'var(--gold)', flexShrink: 0 }} />
               <span>JWT Authentication &amp; Sliding Window Rate Limiting</span>
             </div>
-            <div className="flex items-center gap-2">
-              <Clock className="w-3.5 h-3.5 text-[#d9bd78]" />
+            <div className="admin-card-footer-item">
+              <Clock className="w-3.5 h-3.5" style={{ color: 'var(--gold)', flexShrink: 0 }} />
               <span>Default initial credentials: <strong>admin</strong> / <strong>AdminPassword!2026#</strong></span>
             </div>
           </div>
 
-          <div className="mt-4 text-center">
-            <Link href="/" className="text-xs text-[#b4c0c8] hover:text-[#d9bd78] underline">
+          <div className="admin-back-wrap">
+            <Link href="/" className="admin-back-link">
               ← Return to Public Website
             </Link>
           </div>
@@ -519,8 +521,8 @@ export default function AdminPortal() {
       <header className="border-b border-[rgba(244,237,223,0.17)] bg-[#0c2033]/90 backdrop-blur sticky top-0 z-40">
         <div className="wrap flex items-center justify-between py-4">
           <div className="flex items-center gap-3">
-            <div className="w-8 h-8 border border-[#d9bd78] flex items-center justify-center text-[#d9bd78] font-serif">
-              ✦
+            <div className="admin-brand-logo" style={{ width: '34px', height: '34px', fontSize: '0.8rem' }}>
+              IMI
             </div>
             <div>
               <div className="text-xs font-bold tracking-widest text-[#d9bd78] uppercase">
@@ -623,7 +625,7 @@ export default function AdminPortal() {
                 </p>
                 {purgedCount > 0 && (
                   <div className="text-[11px] text-[#d9bd78] mt-1 font-mono">
-                    ✦ {purgedCount} past expired articles automatically cleaned by system
+                    • {purgedCount} past expired articles automatically cleaned by system
                   </div>
                 )}
               </div>
@@ -731,7 +733,7 @@ export default function AdminPortal() {
                     Upload Media &amp; Share Links
                   </h2>
                   <p className="text-[11px] text-[#d9bd78] m-0 mt-0.5 font-mono">
-                    ✦ Multer Parser + ImageKit CDN (Single Media Upload)
+                    • Multer Parser + ImageKit CDN (Single Media Upload)
                   </p>
                 </div>
                 <div className="flex gap-2 text-xs">
@@ -1115,7 +1117,7 @@ export default function AdminPortal() {
                 </div>
 
                 <p className="text-[11px] text-[#8fa3b0]">
-                  ✦ If ImageKit keys are not yet provided, Multer gracefully falls back to local server storage, so uploads never fail.
+                  • If ImageKit keys are not yet provided, Multer gracefully falls back to local server storage, so uploads never fail.
                 </p>
               </div>
             </div>
@@ -1146,7 +1148,7 @@ export default function AdminPortal() {
                 </div>
 
                 <p className="text-[11px] text-[#8fa3b0]">
-                  ✦ <strong>Native 30-Day TTL Index:</strong> MongoDB automatically purges articles older than 30 days at the database engine level via its native TTL index on <code>expiresAt</code>.
+                  • <strong>Native 30-Day TTL Index:</strong> MongoDB automatically purges articles older than 30 days at the database engine level via its native TTL index on <code>expiresAt</code>.
                 </p>
               </div>
             </div>
@@ -1194,7 +1196,7 @@ export default function AdminPortal() {
               <div>
                 <h3 className="text-lg font-serif text-[#f4eddf] m-0">Publish New Article</h3>
                 <p className="text-[11px] text-[#d9bd78] m-0">
-                  ✦ Automatic 30-day deletion timer will be activated upon publication
+                  • Automatic 30-day deletion timer will be activated upon publication
                 </p>
               </div>
               <button

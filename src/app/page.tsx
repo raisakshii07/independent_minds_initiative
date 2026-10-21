@@ -93,7 +93,7 @@ export default function HomePage() {
         setFormStatus({
           type: 'success',
           message:
-            '✦ Thank you! Your application has been received and forwarded to our team at independentmindsinitiative@gmail.com.',
+            'Thank you! Your application has been received and forwarded to our team at independentmindsinitiative@gmail.com.',
         });
         setFormData({
           name: '',
@@ -126,7 +126,7 @@ export default function HomePage() {
         <div className="wrap nav">
           <Link href="#home" className="brand" aria-label="Independent Minds Initiative home">
             <span className="brand-mark" aria-hidden="true">
-              ✦
+              IMI
             </span>
             <span>
               INDEPENDENT MINDS
@@ -243,7 +243,7 @@ export default function HomePage() {
         <section className="section learning">
           <div className="wrap learning-grid">
             <div className="orbit" aria-label="Abstract illustration of connected ideas">
-              <div className="orbit-core">✦</div>
+              <div className="orbit-core" style={{ fontFamily: 'var(--serif)', fontWeight: 700, letterSpacing: '0.08em', fontSize: '1rem' }}>IMI</div>
               <div className="orbit-label">Ideas in motion</div>
             </div>
             <div>
@@ -635,8 +635,8 @@ export default function HomePage() {
             <Link href="#focus">Focus areas</Link>
             <Link href="#insights">Insights</Link>
             <Link href="#join">Join us</Link>
-            <Link href="/admin" className="text-[var(--gold)] ml-4 hover:underline">
-              ✦ Admin Portal
+            <Link href="/admin" style={{ color: 'var(--gold)', marginLeft: '16px' }}>
+              Admin Portal ↗
             </Link>
           </div>
         </div>
