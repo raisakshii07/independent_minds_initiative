@@ -390,7 +390,12 @@ export default function HomePage() {
                         )}
                       </div>
                     )}
-                    <a className="text-link" href={targetLink}>
+                    <a
+                      className="text-link"
+                      href={targetLink}
+                      target={art.linkUrl?.startsWith('http') ? '_blank' : undefined}
+                      rel={art.linkUrl?.startsWith('http') ? 'noopener noreferrer' : undefined}
+                    >
                       {art.linkUrl?.startsWith('http') ? 'Explore article ↗' : 'Suggest this topic ↗'}
                     </a>
                   </article>
