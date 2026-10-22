@@ -76,6 +76,7 @@ export default function AdminPortal() {
   const [mediaLinkCategory, setMediaLinkCategory] = useState<'link' | 'video' | 'document'>('link');
   const [uploadingMedia, setUploadingMedia] = useState(false);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const [previewImage, setPreviewImage] = useState<{ url: string; title: string } | null>(null);
 
   // SMTP Test State
   const [testingEmail, setTestingEmail] = useState(false);
@@ -649,8 +650,24 @@ export default function AdminPortal() {
                     </p>
 
                     {art.mediaUrl && (
-                      <div className="admin-article-media-pill">
-                        Attached Media: <span style={{ color: 'var(--gold)' }}>{art.mediaUrl}</span>
+                      <div style={{ marginTop: '8px' }}>
+                        {art.mediaUrl.match(/\.(jpg|jpeg|png|webp|gif|svg|avif)($|\?)/i) ||
+                        art.mediaUrl.includes('/uploads/') ||
+                        art.mediaUrl.includes('imagekit.io') ? (
+                          <div
+                            className="admin-article-img-thumb"
+                            onClick={() => setPreviewImage({ url: art.mediaUrl!, title: art.title })}
+                            title="Click to view full image"
+                          >
+                            {/* eslint-disable-next-line @next/next/no-img-element */}
+                            <img src={art.mediaUrl} alt={art.title} />
+                            <span className="admin-article-img-caption">Attached image · Click to enlarge</span>
+                          </div>
+                        ) : (
+                          <div className="admin-article-media-pill">
+                            Attached Resource: <a href={art.mediaUrl} target="_blank" rel="noopener noreferrer" style={{ color: 'var(--gold)', textDecoration: 'underline' }}>{art.mediaUrl}</a>
+                          </div>
+                        )}
                       </div>
                     )}
                   </div>
@@ -1308,6 +1325,40 @@ export default function AdminPortal() {
                 </button>
               </div>
             </form>
+          </div>
+        </div>
+      )}
+
+      {/* Image Preview Lightbox */}
+      {previewImage && (
+        <div
+          className="image-lightbox-overlay"
+          onClick={() => setPreviewImage(null)}
+          role="dialog"
+          aria-modal="true"
+        >
+          <div
+            className="image-lightbox-modal"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="image-lightbox-header">
+              <span className="image-lightbox-title">{previewImage.title}</span>
+              <button
+                className="image-lightbox-close"
+                onClick={() => setPreviewImage(null)}
+                type="button"
+                aria-label="Close image preview"
+              >
+                <span>✕ Close</span>
+              </button>
+            </div>
+            <div className="image-lightbox-body">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src={previewImage.url}
+                alt={previewImage.title}
+              />
+            </div>
           </div>
         </div>
       )}

@@ -3,6 +3,7 @@ import { MediaType } from '@/lib/types';
 
 export interface IMedia extends Document {
   id: string;
+  customId?: string;
   title: string;
   filename?: string;
   url: string;
@@ -16,6 +17,7 @@ export interface IMedia extends Document {
 
 const MediaSchema = new Schema<IMedia>(
   {
+    customId: { type: String, index: true },
     title: { type: String, required: true },
     filename: { type: String },
     url: { type: String, required: true },
@@ -31,7 +33,7 @@ const MediaSchema = new Schema<IMedia>(
     toJSON: {
       virtuals: true,
       transform: (_, ret: Record<string, unknown>) => {
-        ret.id = ret._id ? String(ret._id) : undefined;
+        ret.id = ret.customId || (ret._id ? String(ret._id) : undefined);
         delete ret._id;
         delete ret.__v;
         return ret;

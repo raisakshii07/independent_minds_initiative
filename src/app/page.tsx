@@ -25,6 +25,16 @@ export default function HomePage() {
   const [articles, setArticles] = useState<Article[]>([]);
   const [loadingArticles, setLoadingArticles] = useState(true);
   const [currentYear, setCurrentYear] = useState<number>(2026);
+  const [lightboxImage, setLightboxImage] = useState<{ url: string; title: string } | null>(null);
+
+  const isImageFile = (url?: string): boolean => {
+    if (!url) return false;
+    return Boolean(
+      url.match(/\.(jpg|jpeg|png|webp|gif|svg|avif)($|\?)/i) ||
+      url.includes('/uploads/') ||
+      url.includes('imagekit.io')
+    );
+  };
 
   useEffect(() => {
     setCurrentYear(new Date().getFullYear());
@@ -368,28 +378,55 @@ export default function HomePage() {
                   >
                     <div className="tag">{art.tag}</div>
                     <h3>{art.title}</h3>
-                    <p>{art.summary}</p>
-                    {art.mediaUrl && (
-                      <div className="my-2">
-                        {art.mediaUrl.match(/\.(jpg|jpeg|png|webp|gif|svg)$/i) ? (
-                          // eslint-disable-next-line @next/next/no-img-element
-                          <img
-                            src={art.mediaUrl}
-                            alt={art.title}
-                            className="w-full h-36 object-cover border border-[rgba(244,237,223,0.1)]"
-                          />
-                        ) : (
-                          <a
-                            href={art.mediaUrl}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="text-xs text-[var(--gold)] underline"
-                          >
-                            View attached media ↗
-                          </a>
-                        )}
+
+                    {/* Dedicated Compact Framed Image Card for Mobile & Grid */}
+                    {art.mediaUrl && isImageFile(art.mediaUrl) && (
+                      <div
+                        className="article-image-card"
+                        onClick={() => setLightboxImage({ url: art.mediaUrl!, title: art.title })}
+                        title="Click to view full image"
+                        role="button"
+                        tabIndex={0}
+                        onKeyDown={(e) => {
+                          if (e.key === 'Enter' || e.key === ' ') {
+                            setLightboxImage({ url: art.mediaUrl!, title: art.title });
+                          }
+                        }}
+                      >
+                        {/* eslint-disable-next-line @next/next/no-img-element */}
+                        <img
+                          src={art.mediaUrl}
+                          alt={art.title}
+                          loading="lazy"
+                        />
+                        <div className="article-image-card-badge">
+                          <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+                            <circle cx="11" cy="11" r="8" />
+                            <line x1="21" y1="21" x2="16.65" y2="16.65" />
+                            <line x1="11" y1="8" x2="11" y2="14" />
+                            <line x1="8" y1="11" x2="14" y2="11" />
+                          </svg>
+                          <span>View</span>
+                        </div>
                       </div>
                     )}
+
+                    <p>{art.summary}</p>
+
+                    {/* Non-image attached resource */}
+                    {art.mediaUrl && !isImageFile(art.mediaUrl) && (
+                      <div style={{ margin: '8px 0 12px 0' }}>
+                        <a
+                          href={art.mediaUrl}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="article-media-pill"
+                        >
+                          <span>Attached Resource ↗</span>
+                        </a>
+                      </div>
+                    )}
+
                     <a
                       className="text-link"
                       href={targetLink}
@@ -646,6 +683,39 @@ export default function HomePage() {
           </div>
         </div>
       </footer>
+      {/* Image Lightbox Modal */}
+      {lightboxImage && (
+        <div
+          className="image-lightbox-overlay"
+          onClick={() => setLightboxImage(null)}
+          role="dialog"
+          aria-modal="true"
+        >
+          <div
+            className="image-lightbox-modal"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="image-lightbox-header">
+              <span className="image-lightbox-title">{lightboxImage.title}</span>
+              <button
+                className="image-lightbox-close"
+                onClick={() => setLightboxImage(null)}
+                type="button"
+                aria-label="Close image preview"
+              >
+                <span>✕ Close</span>
+              </button>
+            </div>
+            <div className="image-lightbox-body">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src={lightboxImage.url}
+                alt={lightboxImage.title}
+              />
+            </div>
+          </div>
+        </div>
+      )}
     </>
   );
 }

@@ -1,6 +1,7 @@
 import fs from 'fs';
 import path from 'path';
 import bcrypt from 'bcryptjs';
+import mongoose from 'mongoose';
 import { DatabaseSchema, Article, MediaItem, CommunityApplication, AdminUser } from './types';
 import { deleteFromImageKit } from './imagekit';
 import { connectToDatabase, isMongoDbConfigured } from './mongodb';
@@ -8,9 +9,11 @@ import { ArticleModel } from '@/models/Article';
 import { MediaModel } from '@/models/Media';
 import { ApplicationModel } from '@/models/Application';
 import { AdminModel } from '@/models/Admin';
+import { SystemMetaModel } from '@/models/SystemMeta';
 
 const DATA_DIR = path.join(process.cwd(), 'data');
 const DB_FILE = path.join(DATA_DIR, 'db.json');
+const DB_BACKUP_FILE = path.join(DATA_DIR, 'db.backup.json');
 
 const DEFAULT_EXPIRATION_DAYS = 30;
 
@@ -128,12 +131,20 @@ function ensureDataDirectory(): void {
 }
 
 // -------------------------------------------------------------
-// MongoDB Auto-Seed Initializer
+// MongoDB Auto-Seed & Migration Initializer
 // -------------------------------------------------------------
 let mongoSeeded = false;
 async function ensureMongoSeed(): Promise<void> {
   if (mongoSeeded) return;
   try {
+    // 1. Check if already seeded/migrated in MongoDB meta collection
+    const meta = await SystemMetaModel.findOne({ key: 'system_init' });
+    if (meta && meta.isSeeded) {
+      mongoSeeded = true;
+      return;
+    }
+
+    // 2. Ensure Admin exists in MongoDB
     const adminCount = await AdminModel.countDocuments();
     if (adminCount === 0) {
       const defaultPassword = process.env.ADMIN_DEFAULT_PASSWORD || 'AdminPassword!2026#';
@@ -148,16 +159,114 @@ async function ensureMongoSeed(): Promise<void> {
       });
     }
 
-    const articleCount = await ArticleModel.countDocuments();
-    if (articleCount === 0) {
-      const now = Date.now();
-      const docs = SEED_ARTICLES.map((art, i) => ({
-        ...art,
-        createdAt: new Date(now - i * 60 * 1000),
-        expiresAt: new Date(now + DEFAULT_EXPIRATION_DAYS * 24 * 60 * 60 * 1000),
-      }));
-      await ArticleModel.insertMany(docs);
+    // 3. Check if local data/db.json or backup exists to dump into MongoDB
+    const sourceFile = fs.existsSync(DB_FILE) ? DB_FILE : (fs.existsSync(DB_BACKUP_FILE) ? DB_BACKUP_FILE : null);
+    if (sourceFile) {
+      try {
+        const raw = fs.readFileSync(sourceFile, 'utf8');
+        const dbData = JSON.parse(raw);
+
+        // Migrate articles from db.json
+        if (Array.isArray(dbData.articles) && dbData.articles.length > 0) {
+          for (const a of dbData.articles) {
+            const exists = await ArticleModel.findOne({
+              $or: [{ customId: a.id }, { title: a.title }],
+            });
+            if (!exists) {
+              await ArticleModel.create({
+                customId: a.id,
+                title: a.title,
+                category: a.category,
+                tag: a.tag || `${a.category.toUpperCase()} · Insight`,
+                summary: a.summary,
+                content: a.content || '',
+                linkUrl: a.linkUrl || '',
+                mediaUrl: a.mediaUrl || '',
+                createdAt: a.createdAt ? new Date(a.createdAt) : new Date(),
+                expiresAt: a.expiresAt
+                  ? new Date(a.expiresAt)
+                  : new Date(Date.now() + DEFAULT_EXPIRATION_DAYS * 24 * 60 * 60 * 1000),
+                viewCount: a.viewCount || 0,
+              });
+            }
+          }
+        }
+
+        // Migrate media from db.json
+        if (Array.isArray(dbData.media) && dbData.media.length > 0) {
+          for (const m of dbData.media) {
+            const exists = await MediaModel.findOne({
+              $or: [{ customId: m.id }, { url: m.url }],
+            });
+            if (!exists) {
+              await MediaModel.create({
+                customId: m.id,
+                title: m.title,
+                filename: m.filename,
+                url: m.url,
+                type: m.type || 'image',
+                size: m.size,
+                mimeType: m.mimeType,
+                createdAt: m.createdAt ? new Date(m.createdAt) : new Date(),
+              });
+            }
+          }
+        }
+
+        // Migrate applications from db.json
+        if (Array.isArray(dbData.applications) && dbData.applications.length > 0) {
+          for (const app of dbData.applications) {
+            const exists = await ApplicationModel.findOne({
+              $or: [{ customId: app.id }, { email: app.email }],
+            });
+            if (!exists) {
+              await ApplicationModel.create({
+                customId: app.id,
+                name: app.name,
+                email: app.email,
+                city: app.city || '',
+                role: app.role || 'Joining the community',
+                message: app.message || '',
+                agreeToContact: Boolean(app.agreeToContact),
+                emailSent: Boolean(app.emailSent),
+                createdAt: app.createdAt ? new Date(app.createdAt) : new Date(),
+              });
+            }
+          }
+        }
+
+        // Clean up db.json if present
+        if (fs.existsSync(DB_FILE)) {
+          try {
+            fs.unlinkSync(DB_FILE);
+            console.log('[Migration] Dumped data/db.json into MongoDB and deleted db.json successfully.');
+          } catch (unlinkErr) {
+            console.warn('[Migration] Could not unlink db.json:', unlinkErr);
+          }
+        }
+      } catch (migrateErr) {
+        console.error('[Migration] Error migrating db.json into MongoDB:', migrateErr);
+      }
+    } else {
+      // If no db.json, check if initial seed is needed for fresh DB
+      const articleCount = await ArticleModel.countDocuments();
+      if (articleCount === 0) {
+        const now = Date.now();
+        const docs = SEED_ARTICLES.map((art, i) => ({
+          ...art,
+          createdAt: new Date(now - i * 60 * 1000),
+          expiresAt: new Date(now + DEFAULT_EXPIRATION_DAYS * 24 * 60 * 60 * 1000),
+        }));
+        await ArticleModel.insertMany(docs);
+      }
     }
+
+    // 4. Mark system initialization as completed in MongoDB (prevents deleted articles from resurrecting)
+    await SystemMetaModel.updateOne(
+      { key: 'system_init' },
+      { $set: { key: 'system_init', isSeeded: true, migratedAt: new Date(), version: 1 } },
+      { upsert: true }
+    );
 
     mongoSeeded = true;
   } catch (err) {
@@ -169,7 +278,6 @@ async function ensureMongoSeed(): Promise<void> {
 // Local JSON Storage Helpers (Fallback)
 // -------------------------------------------------------------
 function getInitialDatabase(): DatabaseSchema {
-  const now = Date.now();
   const defaultPassword = process.env.ADMIN_DEFAULT_PASSWORD || 'AdminPassword!2026#';
   const defaultUsername = process.env.ADMIN_DEFAULT_USERNAME || 'admin';
   const salt = bcrypt.genSaltSync(10);
@@ -183,6 +291,21 @@ function getInitialDatabase(): DatabaseSchema {
     createdAt: new Date().toISOString(),
   };
 
+  // If MongoDB is configured, do not re-create seed articles on empty local fallback
+  if (isMongoDbConfigured()) {
+    return {
+      admins: [admin],
+      articles: [],
+      media: [],
+      applications: [],
+      stats: {
+        expiredArticlesPurged: 0,
+        totalApplications: 0,
+      },
+    };
+  }
+
+  const now = Date.now();
   const articles: Article[] = SEED_ARTICLES.map((item, index) => {
     const createdAt = new Date(now - index * 60 * 1000).toISOString();
     const expiresAt = new Date(now + DEFAULT_EXPIRATION_DAYS * 24 * 60 * 60 * 1000).toISOString();
@@ -210,7 +333,9 @@ export async function readDb(): Promise<DatabaseSchema> {
   ensureDataDirectory();
   if (!fs.existsSync(DB_FILE)) {
     const initial = getInitialDatabase();
-    await writeDbDirect(initial);
+    if (!isMongoDbConfigured()) {
+      await writeDbDirect(initial);
+    }
     return initial;
   }
 
@@ -235,7 +360,9 @@ export async function readDb(): Promise<DatabaseSchema> {
   } catch (err) {
     console.error('Error reading db.json, recreating fallback:', err);
     const fallback = getInitialDatabase();
-    await writeDbDirect(fallback);
+    if (!isMongoDbConfigured()) {
+      await writeDbDirect(fallback);
+    }
     return fallback;
   }
 }
@@ -274,7 +401,7 @@ export async function getActiveArticles(category?: string): Promise<Article[]> {
 
       const docs = await ArticleModel.find(filter).sort({ createdAt: -1 }).lean();
       return docs.map((d) => ({
-        id: String(d._id),
+        id: d.customId || String(d._id),
         title: d.title,
         category: d.category,
         tag: d.tag,
@@ -305,7 +432,7 @@ export async function getAllArticlesAdmin(): Promise<{ articles: Article[]; purg
       await ensureMongoSeed();
       const docs = await ArticleModel.find({}).sort({ createdAt: -1 }).lean();
       const articles: Article[] = docs.map((d) => ({
-        id: String(d._id),
+        id: d.customId || String(d._id),
         title: d.title,
         category: d.category,
         tag: d.tag,
@@ -339,12 +466,14 @@ export async function createArticle(
   const days = data.expirationDays || DEFAULT_EXPIRATION_DAYS;
   const now = Date.now();
   const expiresAtDate = new Date(now + days * 24 * 60 * 60 * 1000);
+  const customId = `art_${now}_${Math.random().toString(36).substring(2, 7)}`;
 
   if (isMongoDbConfigured()) {
     const conn = await connectToDatabase();
     if (conn) {
       await ensureMongoSeed();
       const created = await ArticleModel.create({
+        customId,
         title: data.title,
         category: data.category,
         tag: data.tag || `${data.category.toUpperCase()} · Insight`,
@@ -358,7 +487,7 @@ export async function createArticle(
       });
 
       return {
-        id: String(created._id),
+        id: created.customId || String(created._id),
         title: created.title,
         category: created.category,
         tag: created.tag,
@@ -376,7 +505,7 @@ export async function createArticle(
   // Local fallback
   const db = await readDb();
   const newArticle: Article = {
-    id: `art_${Date.now()}_${Math.random().toString(36).substring(2, 7)}`,
+    id: customId,
     title: data.title,
     category: data.category,
     tag: data.tag || `${data.category.toUpperCase()} · Insight`,
@@ -390,7 +519,9 @@ export async function createArticle(
   };
 
   db.articles.unshift(newArticle);
-  await writeDb(db);
+  if (fs.existsSync(DB_FILE)) {
+    await writeDb(db);
+  }
   return newArticle;
 }
 
@@ -400,15 +531,25 @@ export async function renewArticleExpiration(id: string, days = DEFAULT_EXPIRATI
   if (isMongoDbConfigured()) {
     const conn = await connectToDatabase();
     if (conn) {
-      const updated = await ArticleModel.findByIdAndUpdate(
-        id,
-        { expiresAt: newExpiresAt },
-        { new: true }
-      ).lean();
+      let updated = null;
+      if (mongoose.Types.ObjectId.isValid(id)) {
+        updated = await ArticleModel.findByIdAndUpdate(
+          id,
+          { expiresAt: newExpiresAt },
+          { new: true }
+        ).lean();
+      }
+      if (!updated) {
+        updated = await ArticleModel.findOneAndUpdate(
+          { customId: id },
+          { expiresAt: newExpiresAt },
+          { new: true }
+        ).lean();
+      }
 
       if (!updated) return null;
       return {
-        id: String(updated._id),
+        id: updated.customId || String(updated._id),
         title: updated.title,
         category: updated.category,
         tag: updated.tag,
@@ -429,7 +570,9 @@ export async function renewArticleExpiration(id: string, days = DEFAULT_EXPIRATI
   if (!article) return null;
 
   article.expiresAt = newExpiresAt.toISOString();
-  await writeDb(db);
+  if (fs.existsSync(DB_FILE)) {
+    await writeDb(db);
+  }
   return article;
 }
 
@@ -437,8 +580,16 @@ export async function deleteArticle(id: string): Promise<boolean> {
   if (isMongoDbConfigured()) {
     const conn = await connectToDatabase();
     if (conn) {
-      const res = await ArticleModel.findByIdAndDelete(id);
-      return Boolean(res);
+      let deleted = null;
+      if (mongoose.Types.ObjectId.isValid(id)) {
+        deleted = await ArticleModel.findByIdAndDelete(id);
+      }
+      if (!deleted) {
+        deleted = await ArticleModel.findOneAndDelete({ customId: id });
+      }
+      if (deleted) {
+        return true;
+      }
     }
   }
 
@@ -447,7 +598,9 @@ export async function deleteArticle(id: string): Promise<boolean> {
   const initialLength = db.articles.length;
   db.articles = db.articles.filter((a) => a.id !== id);
   if (db.articles.length !== initialLength) {
-    await writeDb(db);
+    if (fs.existsSync(DB_FILE)) {
+      await writeDb(db);
+    }
     return true;
   }
   return false;
@@ -463,7 +616,7 @@ export async function getMediaItems(): Promise<MediaItem[]> {
     if (conn) {
       const docs = await MediaModel.find({}).sort({ createdAt: -1 }).lean();
       return docs.map((m) => ({
-        id: String(m._id),
+        id: m.customId || String(m._id),
         title: m.title,
         filename: m.filename,
         url: m.url,
@@ -485,16 +638,18 @@ export async function getMediaItems(): Promise<MediaItem[]> {
 export async function addMediaItem(
   item: Omit<MediaItem, 'id' | 'createdAt'>
 ): Promise<MediaItem> {
+  const customId = `media_${Date.now()}_${Math.random().toString(36).substring(2, 7)}`;
   if (isMongoDbConfigured()) {
     const conn = await connectToDatabase();
     if (conn) {
       const created = await MediaModel.create({
+        customId,
         ...item,
         createdAt: new Date(),
       });
 
       return {
-        id: String(created._id),
+        id: created.customId || String(created._id),
         title: created.title,
         filename: created.filename,
         url: created.url,
@@ -512,12 +667,14 @@ export async function addMediaItem(
   const db = await readDb();
   const newItem: MediaItem = {
     ...item,
-    id: `media_${Date.now()}_${Math.random().toString(36).substring(2, 7)}`,
+    id: customId,
     createdAt: new Date().toISOString(),
   };
 
   db.media.unshift(newItem);
-  await writeDb(db);
+  if (fs.existsSync(DB_FILE)) {
+    await writeDb(db);
+  }
   return newItem;
 }
 
@@ -527,14 +684,21 @@ export async function deleteMediaItem(id: string): Promise<boolean> {
   if (isMongoDbConfigured()) {
     const conn = await connectToDatabase();
     if (conn) {
-      const found = await MediaModel.findById(id);
+      let found = null;
+      if (mongoose.Types.ObjectId.isValid(id)) {
+        found = await MediaModel.findById(id);
+      }
+      if (!found) {
+        found = await MediaModel.findOne({ customId: id });
+      }
+
       if (found) {
         itemToDelete = {
           imagekitFileId: found.imagekitFileId,
           filename: found.filename,
           type: found.type,
         };
-        await MediaModel.findByIdAndDelete(id);
+        await MediaModel.deleteOne({ _id: found._id });
       }
     }
   } else {
@@ -547,7 +711,9 @@ export async function deleteMediaItem(id: string): Promise<boolean> {
         type: item.type,
       };
       db.media = db.media.filter((m) => m.id !== id);
-      await writeDb(db);
+      if (fs.existsSync(DB_FILE)) {
+        await writeDb(db);
+      }
     }
   }
 
@@ -584,16 +750,18 @@ export async function deleteMediaItem(id: string): Promise<boolean> {
 export async function addApplication(
   data: Omit<CommunityApplication, 'id' | 'createdAt'>
 ): Promise<CommunityApplication> {
+  const customId = `app_${Date.now()}_${Math.random().toString(36).substring(2, 7)}`;
   if (isMongoDbConfigured()) {
     const conn = await connectToDatabase();
     if (conn) {
       const created = await ApplicationModel.create({
+        customId,
         ...data,
         createdAt: new Date(),
       });
 
       return {
-        id: String(created._id),
+        id: created.customId || String(created._id),
         name: created.name,
         email: created.email,
         city: created.city,
@@ -611,13 +779,15 @@ export async function addApplication(
   const db = await readDb();
   const newApp: CommunityApplication = {
     ...data,
-    id: `app_${Date.now()}_${Math.random().toString(36).substring(2, 7)}`,
+    id: customId,
     createdAt: new Date().toISOString(),
   };
 
   db.applications.unshift(newApp);
   db.stats.totalApplications = (db.stats.totalApplications || 0) + 1;
-  await writeDb(db);
+  if (fs.existsSync(DB_FILE)) {
+    await writeDb(db);
+  }
   return newApp;
 }
 
@@ -627,7 +797,7 @@ export async function getApplications(): Promise<CommunityApplication[]> {
     if (conn) {
       const docs = await ApplicationModel.find({}).sort({ createdAt: -1 }).lean();
       return docs.map((a) => ({
-        id: String(a._id),
+        id: a.customId || String(a._id),
         name: a.name,
         email: a.email,
         city: a.city,
@@ -687,8 +857,10 @@ export async function getAdminByUsername(username: string): Promise<AdminUser | 
       role: 'admin',
       createdAt: new Date().toISOString(),
     };
-    db.admins.push(admin);
-    await writeDb(db);
+    if (fs.existsSync(DB_FILE)) {
+      db.admins.push(admin);
+      await writeDb(db);
+    }
   }
   return admin || null;
 }
@@ -714,6 +886,8 @@ export async function updateAdminPassword(username: string, newPassword: string)
   if (!admin) return false;
 
   admin.passwordHash = passwordHash;
-  await writeDb(db);
+  if (fs.existsSync(DB_FILE)) {
+    await writeDb(db);
+  }
   return true;
 }

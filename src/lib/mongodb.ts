@@ -57,6 +57,7 @@ export async function connectToDatabase(): Promise<typeof mongoose | null> {
   if (!cached!.promise) {
     cached!.promise = mongoose
       .connect(uri, {
+        dbName: 'independent_minds',
         bufferCommands: false,
         serverSelectionTimeoutMS: 2500, // Fast 2.5s timeout instead of hanging 30s
         connectTimeoutMS: 2500,

@@ -2,6 +2,7 @@ import mongoose, { Schema, Document, Model } from 'mongoose';
 
 export interface IArticle extends Document {
   id: string;
+  customId?: string;
   title: string;
   category: string;
   tag: string;
@@ -16,6 +17,7 @@ export interface IArticle extends Document {
 
 const ArticleSchema = new Schema<IArticle>(
   {
+    customId: { type: String, index: true },
     title: { type: String, required: true },
     category: { type: String, required: true, index: true },
     tag: { type: String, required: true },
@@ -32,7 +34,7 @@ const ArticleSchema = new Schema<IArticle>(
     toJSON: {
       virtuals: true,
       transform: (_, ret: Record<string, unknown>) => {
-        ret.id = ret._id ? String(ret._id) : undefined;
+        ret.id = ret.customId || (ret._id ? String(ret._id) : undefined);
         delete ret._id;
         delete ret.__v;
         return ret;
