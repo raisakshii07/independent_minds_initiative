@@ -112,6 +112,15 @@ export default function RootLayout({
     <html lang="en" data-scroll-behavior="smooth">
       <head>
         <meta name="viewport" content="width=device-width, initial-scale=1" />
+        {/* Critical inline styles to eliminate Flash of Unstyled Content (FOUC) */}
+        <style
+          dangerouslySetInnerHTML={{
+            __html: `
+              :root { --navy: #071727; --cream: #f4eddf; --gold: #d9bd78; }
+              html, body { background-color: #071727 !important; color: #f4eddf !important; margin: 0; padding: 0; }
+            `,
+          }}
+        />
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
