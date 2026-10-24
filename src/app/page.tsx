@@ -26,6 +26,14 @@ export default function HomePage() {
   const [loadingArticles, setLoadingArticles] = useState(true);
   const [currentYear, setCurrentYear] = useState<number>(2026);
   const [lightboxImage, setLightboxImage] = useState<{ url: string; title: string } | null>(null);
+  const [expandedArticles, setExpandedArticles] = useState<Record<string, boolean>>({});
+
+  const toggleArticleExpand = (id: string) => {
+    setExpandedArticles((prev) => ({
+      ...prev,
+      [id]: !prev[id],
+    }));
+  };
 
   const isImageFile = (url?: string): boolean => {
     if (!url) return false;
@@ -370,10 +378,15 @@ export default function HomePage() {
                   `mailto:Independentminds.in@gmail.com?subject=${encodeURIComponent(
                     art.title + ' discussion'
                   )}`;
+                const isExpanded = Boolean(expandedArticles[art.id]);
+                const hasMoreContent = Boolean(
+                  (art.summary && art.summary.length > 90) || art.content
+                );
+
                 return (
                   <article
                     key={art.id}
-                    className="article"
+                    className={`article ${isExpanded ? 'expanded' : ''}`}
                     data-category={art.category}
                   >
                     <div className="tag">{art.tag}</div>
@@ -411,11 +424,38 @@ export default function HomePage() {
                       </div>
                     )}
 
-                    <p>{art.summary}</p>
+                    {/* Summary & Content Body */}
+                    <div className="article-body">
+                      <p className={`article-summary-text ${!isExpanded && hasMoreContent ? 'clamped' : ''}`}>
+                        {art.summary}
+                      </p>
 
-                    {/* Non-image attached resource */}
-                    {art.mediaUrl && !isImageFile(art.mediaUrl) && (
-                      <div style={{ margin: '8px 0 12px 0' }}>
+                      {/* Extended Content when user clicks Read more */}
+                      {isExpanded && art.content && (
+                        <div className="article-full-content">
+                          {art.content}
+                        </div>
+                      )}
+
+                      {/* Read More / Read Less Toggle Button */}
+                      {hasMoreContent && (
+                        <button
+                          type="button"
+                          className="article-read-more-btn"
+                          onClick={() => toggleArticleExpand(art.id)}
+                          aria-expanded={isExpanded}
+                        >
+                          <span>{isExpanded ? 'Read less' : 'Read more'}</span>
+                          <span className="expand-arrow" style={{ transform: isExpanded ? 'rotate(180deg)' : 'none' }}>
+                            ▾
+                          </span>
+                        </button>
+                      )}
+                    </div>
+
+                    {/* Bottom Links (Anchored with margin-top: auto for grid symmetry) */}
+                    <div className="article-footer">
+                      {art.mediaUrl && !isImageFile(art.mediaUrl) && (
                         <a
                           href={art.mediaUrl}
                           target="_blank"
@@ -424,17 +464,17 @@ export default function HomePage() {
                         >
                           <span>Attached Resource ↗</span>
                         </a>
-                      </div>
-                    )}
+                      )}
 
-                    <a
-                      className="text-link"
-                      href={targetLink}
-                      target={art.linkUrl?.startsWith('http') ? '_blank' : undefined}
-                      rel={art.linkUrl?.startsWith('http') ? 'noopener noreferrer' : undefined}
-                    >
-                      {art.linkUrl?.startsWith('http') ? 'Explore article ↗' : 'Suggest this topic ↗'}
-                    </a>
+                      <a
+                        className="text-link"
+                        href={targetLink}
+                        target={art.linkUrl?.startsWith('http') ? '_blank' : undefined}
+                        rel={art.linkUrl?.startsWith('http') ? 'noopener noreferrer' : undefined}
+                      >
+                        {art.linkUrl?.startsWith('http') ? 'Explore article ↗' : 'Suggest this topic ↗'}
+                      </a>
+                    </div>
                   </article>
                 );
               })}

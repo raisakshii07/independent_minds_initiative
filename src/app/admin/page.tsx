@@ -77,6 +77,14 @@ export default function AdminPortal() {
   const [uploadingMedia, setUploadingMedia] = useState(false);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [previewImage, setPreviewImage] = useState<{ url: string; title: string } | null>(null);
+  const [expandedAdminArticles, setExpandedAdminArticles] = useState<Record<string, boolean>>({});
+
+  const toggleAdminArticleExpand = (id: string) => {
+    setExpandedAdminArticles((prev) => ({
+      ...prev,
+      [id]: !prev[id],
+    }));
+  };
 
   // SMTP Test State
   const [testingEmail, setTestingEmail] = useState(false);
@@ -645,9 +653,31 @@ export default function AdminPortal() {
                     </div>
 
                     <h3 className="admin-article-title">{art.title}</h3>
-                    <p className="admin-article-summary">
-                      {art.summary}
-                    </p>
+                    {(() => {
+                      const isExpanded = Boolean(expandedAdminArticles[art.id]);
+                      const hasMoreContent = Boolean((art.summary && art.summary.length > 95) || art.content);
+                      return (
+                        <>
+                          <p className={`admin-article-summary ${!isExpanded && hasMoreContent ? 'clamped' : ''}`}>
+                            {art.summary}
+                          </p>
+                          {isExpanded && art.content && (
+                            <div className="article-full-content" style={{ marginBottom: '12px' }}>
+                              {art.content}
+                            </div>
+                          )}
+                          {hasMoreContent && (
+                            <button
+                              type="button"
+                              className="admin-read-more-btn"
+                              onClick={() => toggleAdminArticleExpand(art.id)}
+                            >
+                              <span>{isExpanded ? 'Read less ▴' : 'Read more ▾'}</span>
+                            </button>
+                          )}
+                        </>
+                      );
+                    })()}
 
                     {art.mediaUrl && (
                       <div style={{ marginTop: '8px' }}>

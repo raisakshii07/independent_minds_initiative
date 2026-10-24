@@ -1,0 +1,24 @@
+name: Render Keep-Alive Pinger
+
+on:
+  schedule:
+    # Runs every 14 minutes (Render spins down after 15 minutes of inactivity)
+    - cron: '*/14 * * * *'
+  workflow_dispatch: # Allows manual trigger from GitHub Actions UI
+
+jobs:
+  ping-render:
+    name: Keep Render Warm
+    runs-on: ubuntu-latest
+    steps:
+      - name: Ping Render Health Check
+        run: |
+          RENDER_URL="${{ secrets.RENDER_APP_URL || 'https://independent-minds-initiative.onrender.com' }}"
+          echo "Sending keep-alive ping to: $RENDER_URL/api/health"
+          RESPONSE_CODE=$(curl -s -o /dev/null -w "%{http_code}" --max-time 45 "$RENDER_URL/api/health" || echo "failed")
+          echo "HTTP Response code: $RESPONSE_CODE"
+          if [ "$RESPONSE_CODE" = "200" ]; then
+            echo "✓ Render service is warm and awake!"
+          else
+            echo "⚠ Ping completed with code: $RESPONSE_CODE"
+          fi

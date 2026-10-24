@@ -7,6 +7,7 @@
     "build": "next build",
     "start": "next start -H 0.0.0.0",
     "migrate:mongo": "node scripts/migrate-to-mongo.js",
+    "keep-alive": "node scripts/keep-alive.js",
     "lint": "eslint"
   },
   "engines": {
