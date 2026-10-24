@@ -3,6 +3,16 @@ import { CommunityApplication } from './types';
 
 const ADMIN_EMAIL = 'Independentminds.in@gmail.com';
 
+function escapeHtml(str?: string): string {
+  if (!str) return '';
+  return String(str)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#039;');
+}
+
 function createTransporter() {
   const host = process.env.SMTP_HOST || 'smtp.gmail.com';
   const port = parseInt(process.env.SMTP_PORT || '465', 10);
@@ -61,27 +71,27 @@ export async function sendApplicationEmail(
 
           <div class="field">
             <div class="label">Applicant Name</div>
-            <div class="value"><strong>${app.name}</strong></div>
+            <div class="value"><strong>${escapeHtml(app.name)}</strong></div>
           </div>
 
           <div class="field">
             <div class="label">Email Address</div>
-            <div class="value"><a href="mailto:${app.email}" style="color:#d9bd78; text-decoration:none;">${app.email}</a></div>
+            <div class="value"><a href="mailto:${encodeURIComponent(app.email)}" style="color:#d9bd78; text-decoration:none;">${escapeHtml(app.email)}</a></div>
           </div>
 
           <div class="field">
             <div class="label">City / State</div>
-            <div class="value">${app.city || 'Not provided'}</div>
+            <div class="value">${escapeHtml(app.city) || 'Not provided'}</div>
           </div>
 
           <div class="field">
             <div class="label">Interested In / Role</div>
-            <div class="value"><strong>${app.role}</strong></div>
+            <div class="value"><strong>${escapeHtml(app.role)}</strong></div>
           </div>
 
           <div class="field">
             <div class="label">Motivation & Message</div>
-            <div class="value message-box">${app.message ? app.message.replace(/</g, '&lt;') : 'No extra message entered.'}</div>
+            <div class="value message-box">${escapeHtml(app.message) || 'No extra message entered.'}</div>
           </div>
 
           <div class="field">
@@ -90,8 +100,8 @@ export async function sendApplicationEmail(
           </div>
 
           <div style="text-align: center; margin-top: 25px;">
-            <a href="mailto:${app.email}?subject=Welcome%20to%20Independent%20Minds%20Initiative" class="button">
-              Reply to ${app.name} ↗
+            <a href="mailto:${encodeURIComponent(app.email)}?subject=Welcome%20to%20Independent%20Minds%20Initiative" class="button">
+              Reply to ${escapeHtml(app.name)} ↗
             </a>
           </div>
         </div>

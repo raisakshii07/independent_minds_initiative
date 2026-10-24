@@ -11,6 +11,29 @@ export const multerUpload = multer({
     fileSize: 25 * 1024 * 1024, // 25 MB max
     files: 1, // Single media upload enforcement
   },
+  fileFilter: (_req, file, cb) => {
+    // Whitelist safe media & document mime types
+    const allowedMime = [
+      'image/jpeg',
+      'image/png',
+      'image/webp',
+      'image/gif',
+      'image/svg+xml',
+      'image/avif',
+      'video/mp4',
+      'video/webm',
+      'video/quicktime',
+      'audio/mpeg',
+      'audio/wav',
+      'application/pdf',
+      'text/plain',
+    ];
+    if (allowedMime.includes(file.mimetype) || file.mimetype.startsWith('image/')) {
+      cb(null, true);
+    } else {
+      cb(new Error(`Unsupported file type: ${file.mimetype}. Only images, videos, audio, and documents are permitted.`));
+    }
+  },
 });
 
 export const singleMediaUpload = multerUpload.single('file');

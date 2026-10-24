@@ -46,19 +46,16 @@ export async function POST(req: NextRequest) {
 
     let isMatch = await comparePassword(password, admin.passwordHash);
 
-    // Dynamic recovery: verify against environment variable or documented initial password
+    // Dynamic recovery: verify against environment variable if set in Render / .env.local
     const envPassword = process.env.ADMIN_DEFAULT_PASSWORD?.trim();
-    const defaultDocsPassword = 'AdminPassword!2026#';
 
-    if (!isMatch) {
-      if ((envPassword && password === envPassword) || password === defaultDocsPassword) {
-        isMatch = true;
-        // Synchronize database with the correct password hash for subsequent requests
-        try {
-          await updateAdminPassword(admin.username, password);
-        } catch (syncErr) {
-          console.warn('Could not auto-sync updated password hash:', syncErr);
-        }
+    if (!isMatch && envPassword && password === envPassword) {
+      isMatch = true;
+      // Synchronize database with the correct password hash for subsequent requests
+      try {
+        await updateAdminPassword(admin.username, password);
+      } catch (syncErr) {
+        console.warn('Could not auto-sync updated password hash:', syncErr);
       }
     }
 

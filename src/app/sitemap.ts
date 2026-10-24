@@ -25,10 +25,11 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
   try {
     const articles = await getActiveArticles();
+    // Only include internal same-domain routes in Google sitemap (Search Console rejects external domain URLs)
     const articleRoutes: MetadataRoute.Sitemap = articles
-      .filter((art) => art.linkUrl && art.linkUrl.startsWith('http'))
+      .filter((art) => art.linkUrl && art.linkUrl.startsWith('/') && !art.linkUrl.startsWith('//'))
       .map((art) => ({
-        url: art.linkUrl!,
+        url: `${baseUrl}${art.linkUrl}`,
         lastModified: art.createdAt ? new Date(art.createdAt) : now,
         changeFrequency: 'weekly',
         priority: 0.7,
