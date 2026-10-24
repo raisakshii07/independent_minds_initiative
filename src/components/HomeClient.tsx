@@ -197,13 +197,14 @@ export default function HomeClient({ initialArticles = [] }: HomeClientProps) {
         {/* Hero Section */}
         <section className="hero">
           <div className="wrap hero-inner">
-            <div className="eyebrow">A space for independent thought</div>
+            <div className="eyebrow">A space for independent thought · Public Initiative</div>
             <h1 className="serif">
-              Think Freely.
-              <br />
-              Learn Deeply.
-              <br />
-              <em>Act Meaningfully.</em>
+              <span style={{ display: 'block', fontSize: 'clamp(2.5rem, 5.5vw, 4.2rem)', color: 'var(--cream)', lineHeight: 1.1, marginBottom: '8px' }}>
+                Independent Minds Initiative
+              </span>
+              <span style={{ display: 'block', fontSize: 'clamp(1.5rem, 3.2vw, 2.3rem)', color: 'var(--gold)', fontStyle: 'italic', fontWeight: 400, lineHeight: 1.25 }}>
+                Think Freely. Learn Deeply. Act Meaningfully.
+              </span>
             </h1>
             <p className="lede">
               An emerging youth-led initiative creating space for independent

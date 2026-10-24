@@ -105,6 +105,36 @@ export default function RootLayout({
         },
         inLanguage: 'en-US',
       },
+      {
+        '@type': 'FAQPage',
+        '@id': `${siteUrl}/#faq`,
+        mainEntity: [
+          {
+            '@type': 'Question',
+            name: 'What is the Independent Minds Initiative?',
+            acceptedAnswer: {
+              '@type': 'Answer',
+              text: 'The Independent Minds Initiative is an emerging youth-led platform and community dedicated to cultivating intellectual independence, open inquiry, and civic imagination across society, geopolitics, philosophy, and economics.',
+            },
+          },
+          {
+            '@type': 'Question',
+            name: 'Who founded the Independent Minds Initiative?',
+            acceptedAnswer: {
+              '@type': 'Answer',
+              text: 'The Independent Minds Initiative was founded by Lakshay Rai to provide young thinkers with space for deep learning, open dialogue, and informed action beyond algorithmic feeds.',
+            },
+          },
+          {
+            '@type': 'Question',
+            name: 'How can I join the Independent Minds Initiative?',
+            acceptedAnswer: {
+              '@type': 'Answer',
+              text: 'You can join by submitting an application directly on the official website or by contacting the team at Independentminds.in@gmail.com.',
+            },
+          },
+        ],
+      },
     ],
   };
 
