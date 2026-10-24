@@ -3,7 +3,7 @@
 > **"Teach people how to think, not what to think."**  
 > *Think independently. Question fearlessly. Learn continuously. Lead meaningfully.*
 
-A scalable, modern web platform for the **Independent Minds Initiative**, built with **TypeScript**, **Next.js (App Router)**, and **Tailwind CSS**. It replicates the exact custom design system, background, typography, and interactive components from the initiative's visual identity, while adding an enterprise-grade, JWT-secured Admin Portal, dynamic topic filtering, media management, 30-day automatic article expiration, and community application forwarding to `independentmindsinitiative@gmail.com`.
+A scalable, modern web platform for the **Independent Minds Initiative**, built with **TypeScript**, **Next.js (App Router)**, and **Tailwind CSS**. It replicates the exact custom design system, background, typography, and interactive components from the initiative's visual identity, while adding an enterprise-grade, JWT-secured Admin Portal, dynamic topic filtering, media management, 30-day automatic article expiration, and community application forwarding to `Independentminds.in@gmail.com`.
 
 ---
 
@@ -46,7 +46,7 @@ A scalable, modern web platform for the **Independent Minds Initiative**, built 
 - **One-Click URL Copy & Delete**: Copy media URLs directly to clipboard or delete records and files instantly.
 
 ### 7. Community Applications & Email Dispatch
-- **Target Recipient**: All applications submitted on the homepage are routed to **`independentmindsinitiative@gmail.com`**.
+- **Target Recipient**: All applications submitted on the homepage are routed to **`Independentminds.in@gmail.com`**.
 - **Admin Inbox**: Every registration is persisted in the database so submissions are never dropped, with applicant name, email, city, role interest, motivation, and timestamp.
 - **Direct Reply Action**: One-click button in the admin inbox to draft a reply to the applicant.
 - **Nodemailer Integration**: Supports Gmail SMTP (or any standard SMTP provider like SendGrid/Resend) with an administrative test button to verify delivery.
@@ -86,9 +86,9 @@ A scalable, modern web platform for the **Independent Minds Initiative**, built 
    # SMTP Configuration (optional for live Gmail sending)
    SMTP_HOST=smtp.gmail.com
    SMTP_PORT=465
-   SMTP_USER=independentmindsinitiative@gmail.com
+   SMTP_USER=Independentminds.in@gmail.com
    SMTP_PASS=your-google-app-password
-   SMTP_FROM="Independent Minds Initiative" <independentmindsinitiative@gmail.com>
+   SMTP_FROM="Independent Minds Initiative" <Independentminds.in@gmail.com>
    ```
 
 ### Running the Application
@@ -111,7 +111,7 @@ Open [http://localhost:3000/admin](http://localhost:3000/admin) to access the Ad
 
 ## ✦ Setting up Gmail SMTP for Live Email Notifications
 
-To enable real-time email dispatch to `independentmindsinitiative@gmail.com`:
+To enable real-time email dispatch to `Independentminds.in@gmail.com`:
 
 1. Sign in to your Google Account at [myaccount.google.com](https://myaccount.google.com).
 2. Go to **Security** > **2-Step Verification** (must be enabled).
@@ -136,7 +136,7 @@ To enable real-time email dispatch to `independentmindsinitiative@gmail.com`:
 | `/api/media` | `GET` | Public | Retrieves stored media and links |
 | `/api/media` | `POST` | Admin JWT | Uploads file (multipart) or saves link (JSON) |
 | `/api/media/[id]` | `DELETE` | Admin JWT | Deletes media item and physical file |
-| `/api/join` | `POST` | Public (Rate Limited) | Registers interest & dispatches email to `independentmindsinitiative@gmail.com` |
+| `/api/join` | `POST` | Public (Rate Limited) | Registers interest & dispatches email to `Independentminds.in@gmail.com` |
 | `/api/admin/applications` | `GET` | Admin JWT | Lists all community submissions |
 | `/api/auth/login` | `POST` | Public (Rate Limited) | Authenticates admin & sets JWT cookie |
 | `/api/auth/logout` | `POST` | Admin JWT | Clears session cookie |

@@ -103,7 +103,7 @@ export default function HomePage() {
         setFormStatus({
           type: 'success',
           message:
-            'Thank you! Your application has been received and forwarded to our team at independentmindsinitiative@gmail.com.',
+            'Thank you! Your application has been received and forwarded to our team at Independentminds.in@gmail.com.',
         });
         setFormData({
           name: '',
@@ -367,7 +367,7 @@ export default function HomePage() {
               {filteredArticles.map((art) => {
                 const targetLink =
                   art.linkUrl ||
-                  `mailto:independentmindsinitiative@gmail.com?subject=${encodeURIComponent(
+                  `mailto:Independentminds.in@gmail.com?subject=${encodeURIComponent(
                     art.title + ' discussion'
                   )}`;
                 return (
@@ -607,7 +607,7 @@ export default function HomePage() {
 
                 <p className="form-note">
                   All registrations are securely routed directly to our team at
-                  independentmindsinitiative@gmail.com.
+                  Independentminds.in@gmail.com.
                 </p>
               </form>
             </div>
@@ -653,12 +653,12 @@ export default function HomePage() {
             <div>
               <a
                 className="btn outline"
-                href="mailto:independentmindsinitiative@gmail.com"
+                href="mailto:Independentminds.in@gmail.com"
               >
                 Email the team ↗
               </a>
               <p className="small" style={{ marginTop: '12px' }}>
-                Email the team directly at independentmindsinitiative@gmail.com.
+                Email the team directly at Independentminds.in@gmail.com.
               </p>
             </div>
           </div>

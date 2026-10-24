@@ -1,7 +1,7 @@
 import nodemailer from 'nodemailer';
 import { CommunityApplication } from './types';
 
-const ADMIN_EMAIL = 'independentmindsinitiative@gmail.com';
+const ADMIN_EMAIL = 'Independentminds.in@gmail.com';
 
 function createTransporter() {
   const host = process.env.SMTP_HOST || 'smtp.gmail.com';

@@ -924,7 +924,7 @@ export default function AdminPortal() {
                 </h2>
                 <p className="admin-dash-banner-sub">
                   All submissions are automatically routed to{' '}
-                  <strong style={{ color: 'var(--gold)' }}>independentmindsinitiative@gmail.com</strong> and archived here.
+                  <strong style={{ color: 'var(--gold)' }}>Independentminds.in@gmail.com</strong> and archived here.
                 </p>
               </div>
 
@@ -981,7 +981,7 @@ export default function AdminPortal() {
                       {app.emailSent ? (
                         <span style={{ color: '#10b981', display: 'inline-flex', alignItems: 'center', gap: '4px' }}>
                           <CheckCircle className="w-3.5 h-3.5" />
-                          <span>Dispatched to independentmindsinitiative@gmail.com</span>
+                          <span>Dispatched to Independentminds.in@gmail.com</span>
                         </span>
                       ) : (
                         <span style={{ color: '#f59e0b', display: 'inline-flex', alignItems: 'center', gap: '4px' }}>
@@ -1028,7 +1028,7 @@ export default function AdminPortal() {
               </h2>
               <p className="admin-settings-sub">
                 Community join responses are designated for delivery to{' '}
-                <strong style={{ color: 'var(--gold)' }}>independentmindsinitiative@gmail.com</strong>.
+                <strong style={{ color: 'var(--gold)' }}>Independentminds.in@gmail.com</strong>.
               </p>
 
               <div className="admin-info-box">
@@ -1050,9 +1050,9 @@ export default function AdminPortal() {
                 <div className="admin-code-snippet">
                   SMTP_HOST=smtp.gmail.com<br />
                   SMTP_PORT=465<br />
-                  SMTP_USER=independentmindsinitiative@gmail.com<br />
+                  SMTP_USER=Independentminds.in@gmail.com<br />
                   SMTP_PASS=your-16-char-app-password<br />
-                  SMTP_FROM=&quot;Independent Minds Initiative&quot; &lt;independentmindsinitiative@gmail.com&gt;
+                  SMTP_FROM=&quot;Independent Minds Initiative&quot; &lt;Independentminds.in@gmail.com&gt;
                 </div>
               </div>
 
@@ -1076,7 +1076,7 @@ export default function AdminPortal() {
                   )}
                 </button>
                 <span style={{ fontSize: '0.72rem', color: '#8fa3b0' }}>
-                  Sends a test message directly to independentmindsinitiative@gmail.com
+                  Sends a test message directly to Independentminds.in@gmail.com
                 </span>
               </div>
             </div>

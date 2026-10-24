@@ -50,7 +50,7 @@ export async function POST(req: NextRequest) {
       emailSent: false,
     });
 
-    // Send email notification to independentmindsinitiative@gmail.com
+    // Send email notification to Independentminds.in@gmail.com
     const emailResult = await sendApplicationEmail(application);
     application.emailSent = emailResult.success;
     application.emailStatusMessage = emailResult.message;

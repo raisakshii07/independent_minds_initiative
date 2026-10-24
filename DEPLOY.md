@@ -10,7 +10,7 @@ Before deploying, make sure you have:
 1. **GitHub Repository**: Push this project folder to your GitHub account.
 2. **MongoDB Atlas URI**: Ensure you have created a database user and whitelisted `0.0.0.0/0` under Network Access.
 3. **ImageKit Keys**: Free account at [imagekit.io](https://imagekit.io) (Public Key, Private Key, URL Endpoint).
-4. **Gmail App Password**: For sending emails to `independentmindsinitiative@gmail.com`.
+4. **Gmail App Password**: For sending emails to `Independentminds.in@gmail.com`.
 
 ---
 
@@ -87,9 +87,9 @@ If you prefer setting up manually without Blueprints:
 | `IMAGEKIT_URL_ENDPOINT` | `https://ik.imagekit.io/...` | From imagekit.io developer options |
 | `SMTP_HOST` | `smtp.gmail.com` | Gmail SMTP Server |
 | `SMTP_PORT` | `465` | SSL Port |
-| `SMTP_USER` | `independentmindsinitiative@gmail.com` | Target receiver |
+| `SMTP_USER` | `Independentminds.in@gmail.com` | Target receiver |
 | `SMTP_PASS` | `xxxx xxxx xxxx xxxx` | 16-char Gmail App Password |
-| `SMTP_FROM` | `"Independent Minds Initiative" <independentmindsinitiative@gmail.com>` | Sender header |
+| `SMTP_FROM` | `"Independent Minds Initiative" <Independentminds.in@gmail.com>` | Sender header |
 
 6. Click **Create Web Service**.
 
@@ -102,7 +102,7 @@ Once Render finishes building (`Build succeeded`):
 1. **Visit your live URL**: Render will provide a free URL (e.g. `https://independent-minds-initiative.onrender.com`).
 2. **Access Admin Portal**: Open `https://your-app.onrender.com/admin` and log in with your admin credentials.
 3. **Upload an Article & Media**: Test creating an article with a 30-day expiration timer and uploading an image via ImageKit.
-4. **Test the Join Community Form**: Submit the form on the homepage and check that the submission appears in the Admin Portal inbox and delivers to `independentmindsinitiative@gmail.com`.
+4. **Test the Join Community Form**: Submit the form on the homepage and check that the submission appears in the Admin Portal inbox and delivers to `Independentminds.in@gmail.com`.
 
 ---
 
