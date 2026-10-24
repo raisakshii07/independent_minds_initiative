@@ -100,6 +100,9 @@ export default function RootLayout({
           name: 'Lakshay Rai',
         },
         sameAs: [
+          'https://www.instagram.com/voiceofindependentminds',
+          'https://www.youtube.com/@IndependentMindsInitiative',
+          'https://whatsapp.com/channel/0029VbEecer0lwglLOTOtp1v',
           'https://github.com/raisakshii07/independent_minds_initiative',
         ],
       },

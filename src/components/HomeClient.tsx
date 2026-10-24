@@ -1,8 +1,14 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
 import { Article } from '@/lib/types';
+import {
+  InstagramIcon,
+  YouTubeIcon,
+  WhatsAppIcon,
+  SOCIAL_LINKS,
+} from './SocialIcons';
 
 const CATEGORIES = [
   { id: 'all', label: 'All topics' },
@@ -31,6 +37,19 @@ export default function HomeClient({ initialArticles = [] }: HomeClientProps) {
   const [currentYear, setCurrentYear] = useState<number>(2026);
   const [lightboxImage, setLightboxImage] = useState<{ url: string; title: string } | null>(null);
   const [expandedArticles, setExpandedArticles] = useState<Record<string, boolean>>({});
+  const [socialsExpanded, setSocialsExpanded] = useState(false);
+  const [showJoinSuccessModal, setShowJoinSuccessModal] = useState(false);
+  const socialExpandRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const handleClickOutside = (e: MouseEvent) => {
+      if (socialExpandRef.current && !socialExpandRef.current.contains(e.target as Node)) {
+        setSocialsExpanded(false);
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
 
   const toggleArticleExpand = (id: string) => {
     setExpandedArticles((prev) => ({
@@ -127,6 +146,7 @@ export default function HomeClient({ initialArticles = [] }: HomeClientProps) {
           message: '',
           agreeToContact: false,
         });
+        setShowJoinSuccessModal(true);
       } else {
         setFormStatus({
           type: 'error',
@@ -186,6 +206,59 @@ export default function HomeClient({ initialArticles = [] }: HomeClientProps) {
             <Link href="#about" onClick={() => setMobileMenuOpen(false)}>
               About
             </Link>
+
+            {/* Expanding Social Media Channels Widget */}
+            <div
+              ref={socialExpandRef}
+              className={`nav-social-expand ${socialsExpanded ? 'expanded' : ''}`}
+            >
+              <button
+                type="button"
+                className="nav-social-trigger"
+                onClick={() => setSocialsExpanded(!socialsExpanded)}
+                aria-expanded={socialsExpanded}
+                aria-label={socialsExpanded ? 'Collapse social links' : 'Expand community social media channels'}
+                title="Connect on Social Media"
+              >
+                <span className="nav-social-trigger-icon">✦</span>
+                <span className="nav-social-trigger-label">Connect</span>
+                <span className="nav-social-trigger-arrow">{socialsExpanded ? '✕' : '▸'}</span>
+              </button>
+
+              <div className="nav-social-drawer" aria-hidden={!socialsExpanded}>
+                <a
+                  href={SOCIAL_LINKS.whatsapp}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="nav-social-icon-btn whatsapp"
+                  aria-label="Join WhatsApp Community"
+                  title="WhatsApp Community Channel"
+                >
+                  <WhatsAppIcon size={15} />
+                </a>
+                <a
+                  href={SOCIAL_LINKS.instagram}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="nav-social-icon-btn instagram"
+                  aria-label="Follow on Instagram"
+                  title="Instagram (@voiceofindependentminds)"
+                >
+                  <InstagramIcon size={14} />
+                </a>
+                <a
+                  href={SOCIAL_LINKS.youtube}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="nav-social-icon-btn youtube"
+                  aria-label="Subscribe on YouTube"
+                  title="YouTube (@IndependentMindsInitiative)"
+                >
+                  <YouTubeIcon size={15} />
+                </a>
+              </div>
+            </div>
+
             <Link
               href="#join"
               className="btn"
@@ -660,6 +733,31 @@ export default function HomeClient({ initialArticles = [] }: HomeClientProps) {
                   All registrations are securely routed directly to our team at
                   Independentminds.in@gmail.com.
                 </p>
+
+                <div style={{ marginTop: '16px', paddingTop: '16px', borderTop: '1px solid var(--line)', display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '10px' }}>
+                  <span style={{ fontSize: '0.78rem', color: 'var(--muted)' }}>
+                    Looking to connect immediately?
+                  </span>
+                  <button
+                    type="button"
+                    onClick={() => setShowJoinSuccessModal(true)}
+                    style={{
+                      background: 'rgba(217, 189, 120, 0.12)',
+                      border: '1px solid rgba(217, 189, 120, 0.4)',
+                      color: 'var(--gold)',
+                      padding: '5px 12px',
+                      borderRadius: '999px',
+                      fontSize: '0.74rem',
+                      fontWeight: 600,
+                      cursor: 'pointer',
+                      display: 'inline-flex',
+                      alignItems: 'center',
+                      gap: '6px',
+                    }}
+                  >
+                    <span>✦ Join Community Channels</span>
+                  </button>
+                </div>
               </form>
             </div>
           </div>
@@ -742,6 +840,38 @@ export default function HomeClient({ initialArticles = [] }: HomeClientProps) {
             <Link href="#focus">Focus areas</Link>
             <Link href="#insights">Insights</Link>
             <Link href="#join">Join us</Link>
+            <div style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', marginLeft: '10px' }}>
+              <a
+                href={SOCIAL_LINKS.whatsapp}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="nav-social-icon-btn whatsapp"
+                aria-label="Join WhatsApp Community"
+                title="WhatsApp Channel"
+              >
+                <WhatsAppIcon size={14} />
+              </a>
+              <a
+                href={SOCIAL_LINKS.instagram}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="nav-social-icon-btn instagram"
+                aria-label="Follow on Instagram"
+                title="Instagram (@voiceofindependentminds)"
+              >
+                <InstagramIcon size={13} />
+              </a>
+              <a
+                href={SOCIAL_LINKS.youtube}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="nav-social-icon-btn youtube"
+                aria-label="Subscribe on YouTube"
+                title="YouTube (@IndependentMindsInitiative)"
+              >
+                <YouTubeIcon size={14} />
+              </a>
+            </div>
             <Link href="/privacy-policy" style={{ color: 'var(--muted)', marginLeft: '16px' }}>
               Privacy Policy
             </Link>
@@ -781,6 +911,109 @@ export default function HomeClient({ initialArticles = [] }: HomeClientProps) {
                 alt={lightboxImage.title}
               />
             </div>
+          </div>
+        </div>
+      )}
+
+      {/* Post-Join Follow & Connect Modal */}
+      {showJoinSuccessModal && (
+        <div
+          className="social-modal-overlay"
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="social-modal-title"
+          onClick={() => setShowJoinSuccessModal(false)}
+        >
+          <div
+            className="social-modal-card"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <button
+              type="button"
+              className="social-modal-close"
+              onClick={() => setShowJoinSuccessModal(false)}
+              aria-label="Close modal"
+            >
+              ✕
+            </button>
+
+            <div className="social-modal-header">
+              <span className="social-modal-badge">✦ Registration Received</span>
+              <h2 id="social-modal-title" className="social-modal-title">
+                Welcome to Independent Minds
+              </h2>
+              <p className="social-modal-sub">
+                Your application has been received and routed directly to our editorial team at Independentminds.in@gmail.com.
+                Connect with our active channels to participate in discussions, reading circles, and publication updates:
+              </p>
+            </div>
+
+            <div className="social-modal-list">
+              {/* WhatsApp Community */}
+              <a
+                href={SOCIAL_LINKS.whatsapp}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="social-channel-item"
+              >
+                <div className="social-channel-left">
+                  <div className="social-channel-icon-wrap whatsapp">
+                    <WhatsAppIcon size={22} />
+                  </div>
+                  <div className="social-channel-info">
+                    <span className="social-channel-name">WhatsApp Community</span>
+                    <span className="social-channel-desc">Official discussion &amp; announcements channel</span>
+                  </div>
+                </div>
+                <span className="social-channel-btn whatsapp">Join ↗</span>
+              </a>
+
+              {/* Instagram */}
+              <a
+                href={SOCIAL_LINKS.instagram}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="social-channel-item"
+              >
+                <div className="social-channel-left">
+                  <div className="social-channel-icon-wrap instagram">
+                    <InstagramIcon size={20} />
+                  </div>
+                  <div className="social-channel-info">
+                    <span className="social-channel-name">Instagram</span>
+                    <span className="social-channel-desc">@voiceofindependentminds · Ideas &amp; thinkers</span>
+                  </div>
+                </div>
+                <span className="social-channel-btn instagram">Follow ↗</span>
+              </a>
+
+              {/* YouTube */}
+              <a
+                href={SOCIAL_LINKS.youtube}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="social-channel-item"
+              >
+                <div className="social-channel-left">
+                  <div className="social-channel-icon-wrap youtube">
+                    <YouTubeIcon size={22} />
+                  </div>
+                  <div className="social-channel-info">
+                    <span className="social-channel-name">YouTube Channel</span>
+                    <span className="social-channel-desc">@IndependentMindsInitiative · Discussions &amp; talks</span>
+                  </div>
+                </div>
+                <span className="social-channel-btn youtube">Subscribe ↗</span>
+              </a>
+            </div>
+
+            <button
+              type="button"
+              className="social-modal-footer-btn"
+              onClick={() => setShowJoinSuccessModal(false)}
+            >
+              Done · Return to Website
+            </button>
           </div>
         </div>
       )}
