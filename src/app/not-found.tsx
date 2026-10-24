@@ -18,7 +18,19 @@ export default function NotFound() {
       <header className="header">
         <div className="wrap nav">
           <Link href="/" className="brand" aria-label="Independent Minds Initiative">
-            <span className="brand-badge">IMI</span>
+            <img
+              src="/logo-mark.png"
+              alt="IMI"
+              style={{
+                width: '38px',
+                height: '38px',
+                borderRadius: '6px',
+                objectFit: 'contain',
+                background: '#f4eddf',
+                border: '1px solid rgba(217, 189, 120, 0.45)',
+                flexShrink: 0,
+              }}
+            />
             <div className="brand-title">
               <strong>Independent Minds Initiative</strong>
               <span>Think freely. Learn deeply.</span>

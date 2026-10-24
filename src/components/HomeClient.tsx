@@ -149,13 +149,17 @@ export default function HomeClient({ initialArticles = [] }: HomeClientProps) {
       <header>
         <div className="wrap nav">
           <Link href="#home" className="brand" aria-label="Independent Minds Initiative home">
-            <span className="brand-mark" aria-hidden="true">
-              IMI
-            </span>
+            <img
+              src="/logo-mark.png"
+              alt="Independent Minds Initiative Crest"
+              className="brand-logo-img"
+              width={38}
+              height={38}
+            />
             <span>
               INDEPENDENT MINDS
               <br />
-              INITIATIVE
+              <span style={{ color: 'var(--gold)' }}>INITIATIVE</span>
             </span>
           </Link>
 
@@ -715,9 +719,23 @@ export default function HomeClient({ initialArticles = [] }: HomeClientProps) {
       {/* Footer */}
       <footer className="footer">
         <div className="wrap footer-grid">
-          <div>
-            © {currentYear} Independent Minds Initiative. Built
-            around ideas, made for people.
+          <div style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
+            <img
+              src="/logo-mark.png"
+              alt="Independent Minds Initiative"
+              style={{
+                width: '32px',
+                height: '32px',
+                borderRadius: '4px',
+                objectFit: 'contain',
+                background: '#f4eddf',
+                border: '1px solid rgba(217, 189, 120, 0.45)',
+                flexShrink: 0,
+              }}
+            />
+            <div>
+              © {currentYear} Independent Minds Initiative. Built around ideas, made for people.
+            </div>
           </div>
           <div className="footer-links">
             <Link href="#vision">Vision</Link>

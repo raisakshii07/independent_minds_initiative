@@ -34,6 +34,15 @@ export const metadata: Metadata = {
   alternates: {
     canonical: '/',
   },
+  icons: {
+    icon: [
+      { url: '/favicon.ico', sizes: 'any' },
+      { url: '/icon.png', type: 'image/png', sizes: '512x512' },
+    ],
+    apple: [
+      { url: '/apple-touch-icon.png', sizes: '180x180', type: 'image/png' },
+    ],
+  },
   openGraph: {
     title: 'Independent Minds Initiative — Think Freely. Learn Deeply. Act Meaningfully.',
     description:
@@ -83,7 +92,7 @@ export default function RootLayout({
         '@id': `${siteUrl}/#organization`,
         name: 'Independent Minds Initiative',
         url: siteUrl,
-        logo: `${siteUrl}/opengraph-image`,
+        logo: `${siteUrl}/logo.png`,
         description:
           'A youth-led platform creating space for independent thought, meaningful learning, and civic imagination across disciplines.',
         founder: {

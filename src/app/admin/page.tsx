@@ -407,9 +407,20 @@ export default function AdminPortal() {
       <div className="admin-login-screen">
         <div className="admin-card">
           <div className="admin-brand-header">
-            <div className="admin-brand-logo">
-              IMI
-            </div>
+            <img
+              src="/logo-mark.png"
+              alt="IMI Logo"
+              style={{
+                width: '46px',
+                height: '46px',
+                borderRadius: '8px',
+                objectFit: 'contain',
+                background: '#f4eddf',
+                border: '1px solid rgba(217, 189, 120, 0.45)',
+                boxShadow: '0 2px 8px rgba(0,0,0,0.25)',
+                flexShrink: 0,
+              }}
+            />
             <div className="admin-brand-title-wrap">
               <h1 className="admin-brand-title">
                 Independent Minds
@@ -524,9 +535,20 @@ export default function AdminPortal() {
       <header className="admin-dash-header">
         <div className="wrap admin-dash-nav">
           <div className="admin-dash-brand">
-            <div className="admin-brand-logo" style={{ width: '34px', height: '34px', fontSize: '0.8rem' }}>
-              IMI
-            </div>
+            <img
+              src="/logo-mark.png"
+              alt="IMI Logo"
+              style={{
+                width: '36px',
+                height: '36px',
+                borderRadius: '6px',
+                objectFit: 'contain',
+                background: '#f4eddf',
+                border: '1px solid rgba(217, 189, 120, 0.45)',
+                boxShadow: '0 2px 8px rgba(0,0,0,0.25)',
+                flexShrink: 0,
+              }}
+            />
             <div>
               <h2 className="admin-dash-title">
                 Independent Minds Initiative
