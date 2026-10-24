@@ -2,7 +2,7 @@ import React from 'react';
 
 export const SOCIAL_LINKS = {
   instagram: 'https://www.instagram.com/voiceofindependentminds',
-  youtube: 'https://www.youtube.com/@IndependentMindsInitiative',
+  youtube: 'https://youtube.com/@independentmindsintitiative?si=KI1qKEagouIZYRx8',
   whatsapp: 'https://whatsapp.com/channel/0029VbEecer0lwglLOTOtp1v',
 };
 
